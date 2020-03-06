@@ -1,5 +1,25 @@
 <template>
-  <div id="userLayout" :class="['user-layout-wrapper', device]">
+  <div class="homepage-hero-module">
+    <div id="userLayout" :class="['user-layout-wrapper', device]">
+      <div class="container">
+        <route-view></route-view>
+      </div>
+    </div>
+    <div class="video-container">
+      <div :style="fixStyle" class="filter"></div>
+      <video :style="fixStyle" autoplay loop class="fillWidth" v-on:canplay="canplay">
+        <source src="../../assets/coverr.mp4" type="video/mp4"/>
+        Your browser does not support the video tag. I suggest you upgrade your browser.
+        <source src="static/cover/WEBM/Yellow-Cars.webm" type="video/webm"/>
+        Your browser does not support the video tag. I suggest you upgrade your browser.
+      </video>
+      <div class="poster hidden" v-if="!vedioCanPlay">
+        <img :style="fixStyle" src="../../assets/coverr.jpg" alt="">
+      </div>
+    </div>
+  </div>
+
+<!--  <div id="userLayout" :class="['user-layout-wrapper', device]">
     <div class="container">
       <div class="top">
         <div class="header">
@@ -9,24 +29,24 @@
           </a>
         </div>
         <div class="desc">
-          Jeecg Boot 是中国最具影响力的 企业级 快速开发平台
+        ******************
         </div>
       </div>
 
       <route-view></route-view>
 
-      <div class="footer">
+     &lt;!&ndash; <div class="footer">
         <div class="links">
-          <a href="http://doc.jeecg.com" target="_blank">帮助</a>
-          <a href="https://github.com/zhangdaiscott/jeecg-boot" target="_blank">隐私</a>
-          <a href="https://github.com/zhangdaiscott/jeecg-boot/blob/master/LICENSE" target="_blank">条款</a>
+          <a href="" target="_blank">帮助</a>
+          <a href="" target="_blank">隐私</a>
+          <a href="" target="_blank">条款</a>
         </div>
         <div class="copyright">
-          Copyright &copy; 2019 <a href="http://www.jeecg.com" target="_blank">JEECG开源社区</a> 出品
+          Copyright &copy; 2020 <a href="" target="_blank"></a>
         </div>
-      </div>
+      </div>&ndash;&gt;
     </div>
-  </div>
+  </div>-->
 </template>
 
 <script>
@@ -38,9 +58,43 @@
     components: { RouteView },
     mixins: [mixinDevice],
     data () {
-      return {}
+      return {
+          vedioCanPlay: false,
+          fixStyle: ''
+      }
+    },
+    methods: {
+      canplay() {
+          this.vedioCanPlay = true
+      }
     },
     mounted () {
+        window.onresize = () => {
+            const windowWidth = document.body.clientWidth
+            const windowHeight = document.body.clientHeight
+            const windowAspectRatio = windowHeight / windowWidth
+            let videoWidth
+            let videoHeight
+            if (windowAspectRatio < 0.5625) {
+                videoWidth = windowWidth
+                videoHeight = videoWidth * 0.5625
+                this.fixStyle = {
+                    height: windowWidth * 0.5625 + 'px',
+                    width: windowWidth + 'px',
+                    'margin-bottom': (windowHeight - videoHeight) / 2 + 'px',
+                    'margin-left': 'initial'
+                }
+            } else {
+                videoHeight = windowHeight
+                videoWidth = videoHeight / 0.5625
+                this.fixStyle = {
+                    height: windowHeight + 'px',
+                    width: windowHeight / 0.5625 + 'px',
+                    'margin-left': (windowWidth - videoWidth) / 2 + 'px',
+                    'margin-bottom': 'initial'
+                }
+            }
+        }
       document.body.classList.add('userLayout')
     },
     beforeDestroy () {
@@ -65,10 +119,17 @@
     .container {
       width: 100%;
       min-height: 100%;
-      background: #f0f2f5 url(~@/assets/background.svg) no-repeat 50%;
-      background-size: 100%;
+     // background: #f0f2f5 url(~@/assets/background.svg) no-repeat 50%;
+     // background-size: 100%;
       padding: 110px 0 144px;
       position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+      position: absolute;
+      z-index: 100;
+
 
       a {
         text-decoration: none;
